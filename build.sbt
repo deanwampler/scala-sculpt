@@ -21,13 +21,14 @@ Test / fork := true
 // so the output of `Test/runMain ...Samples` doesn't get tagged with [info]
 Test / outputStrategy := Some(StdoutOutput)
 
-scalacOptions ++= Seq(
+scalacOptions in Compile ++= Seq(
   "-deprecation",
   "-unchecked",
   "-feature",
   "-Xlint",
   "-Xfatal-warnings",
 )
+scalacOptions in (Compile, console) := Seq()
 
 // generate same JAR name as `package` would:
 // - don't append "-assembly"; see issue #18
