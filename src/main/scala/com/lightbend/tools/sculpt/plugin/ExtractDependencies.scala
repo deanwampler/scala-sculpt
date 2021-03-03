@@ -62,17 +62,12 @@ abstract class ExtractDependencies extends PluginComponent {
     def apply(unit: CompilationUnit) = extractDependenciesTraverser.traverse(unit.body)
 
     def writeOutput(s: String): Unit = {
-      def p(prefix: String, file: scala.reflect.io.File) =
-        println(s"Sculpt: $prefix output to $file (full path: ${file.toAbsolute})...")
-
       outputPath match {
         case Some(f) => 
           val file = new scala.reflect.io.File(f)(Codec.UTF8)
           if (appendToOutputPath) {
-            p("Appending", file)
             file.appendAll(s)
           } else {
-            p("Writing", file)
             file.writeAll(s)
           }
         case None => print(s)

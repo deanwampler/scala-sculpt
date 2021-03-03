@@ -26,8 +26,7 @@ class SculptPlugin(val global: Global) extends Plugin {
 
   override val optionsHelp: Option[String] = Some(
     "  -P:sculpt:out=<path>               Path to write dependency file to (default: stdout)\n" +
-    "  -P:sculpt:outToClassDir=<path>     Write the dependency file the <path> under the directory where class files are written\n" +
-    "  -P:sculpt:appendOutput=true|false  Append output to the output file. Default is false. Ignored for stdout\n" +
+    "  -P:sculpt:appendOutput=true|false  Append data to the output file. Default is false; overwrite the output file. Ignored when using stdout\n" +
     "  -P:sculpt:mode=class               Run in 'class mode' instead of default fine-grained mode"
   )
 
@@ -35,15 +34,6 @@ class SculptPlugin(val global: Global) extends Plugin {
     options.foreach {
       case r"out=(.*)$out" =>
         extractDependencies.outputPath = Some(new File(out))
-      case r"outToClassDir=(.*)$out" =>
-        global.settings.outputDirs.getSingleOutput match {
-          case Some(dir) if dir.isDirectory => 
-            extractDependencies.outputPath = Some(new File(dir.file, out))
-          case Some(dir) =>
-            error(s"-d $dir argument doesn't appear to be a directory!")
-          case None =>
-            error(s"The compiler's global settings don't have a directory for class output defined!")
-        }
       case r"appendOutput=(.*)$tf" =>
         extractDependencies.appendToOutputPath = tf.toBoolean
       case r"mode=class" =>
